@@ -1,0 +1,347 @@
+#include <GL/glut.h>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <cmath>
+
+int windowWidth = 800, windowHeight = 600;
+float birdY = 300, birdVelocity = 0, gravity = -0.3f, jumpStrength = 8.0f;
+int score = 0, lives = 3, level = 1;
+bool gameOver = false;
+
+struct Pipe {
+    float x;
+    float gapY;
+    float speed;
+} pipe;
+
+float groundOffset = 0;
+float gapSize = 150.0f; // initial gap (easy for level 1)
+
+void resetGame() {
+    birdY = 300;
+    birdVelocity = 0;
+    score = 0;
+    lives = 3;
+    level = 1;
+    gapSize = 150.0f; // bigger gap for level 1
+    pipe.x = windowWidth;
+    pipe.gapY = rand() % (windowHeight - 200) + 100;
+    pipe.speed = 2.0f;
+    groundOffset = 0;
+    gameOver = false;
+}
+
+void drawText(float x, float y, std::string text) {
+    glRasterPos2f(x, y);
+    for (char c : text) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+    }
+}
+
+void drawGradientBackground() {
+    glBegin(GL_QUADS);
+
+    if (level == 1 || level == 3) glColor3f(0.4f, 0.7f, 1.0f); // same top color
+    if (level == 2) glColor3f(1.0f, 0.6f, 0.2f);
+    glVertex2f(0, windowHeight);
+    glVertex2f(windowWidth, windowHeight);
+
+    if (level == 1 || level == 3) glColor3f(0.7f, 0.9f, 1.0f); // same bottom color
+    if (level == 2) glColor3f(1.0f, 0.8f, 0.5f);
+    glVertex2f(windowWidth, 0);
+    glVertex2f(0, 0);
+
+    glEnd();
+}
+
+
+void drawBird() {
+    // --- BODY (elliptical, with two-tone shading) ---
+    glColor3f(1.0f, 0.92f, 0.0f); // bright yellow
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(110 + 22 * cos(theta), birdY + 16 * sin(theta));
+    }
+    glEnd();
+
+    // Lower shadow for depth
+    glColor3f(0.95f, 0.85f, 0.0f);
+    glBegin(GL_POLYGON);
+    for (int i = 180; i <= 360; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(110 + 22 * cos(theta), birdY + 16 * sin(theta));
+    }
+    glEnd();
+
+    // --- HEAD ---
+    glColor3f(1.0f, 0.95f, 0.0f);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(138 + 14 * cos(theta), birdY + 10 * sin(theta));
+    }
+    glEnd();
+
+    // --- WING (curved, with highlight) ---
+    glColor3f(0.9f, 0.7f, 0.0f);
+    glBegin(GL_POLYGON);
+    for (int i = 45; i <= 315; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(110 + 12 * cos(theta), birdY + 8 * sin(theta));
+    }
+    glEnd();
+    // Wing highlight
+    glColor3f(1.0f, 0.85f, 0.2f);
+    glBegin(GL_POLYGON);
+    for (int i = 60; i <= 300; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(110 + 8 * cos(theta), birdY + 5 * sin(theta));
+    }
+    glEnd();
+
+    // --- TAIL FEATHERS ---
+    glColor3f(0.85f, 0.5f, 0.0f);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(90, birdY + 6);
+        glVertex2f(75, birdY + 14);
+        glVertex2f(90, birdY + 2);
+    glEnd();
+    glBegin(GL_TRIANGLES);
+        glVertex2f(90, birdY + 2);
+        glVertex2f(75, birdY - 2);
+        glVertex2f(90, birdY - 4);
+    glEnd();
+    glBegin(GL_TRIANGLES);
+        glVertex2f(90, birdY - 2);
+        glVertex2f(75, birdY - 8);
+        glVertex2f(90, birdY - 6);
+    glEnd();
+
+    // --- EYE ---
+    glColor3f(1, 1, 1); // white
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(143 + 5 * cos(theta), birdY + 6 + 5 * sin(theta));
+    }
+    glEnd();
+
+    // Pupil
+    glColor3f(0, 0, 0);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(143 + 2 * cos(theta), birdY + 6 + 2 * sin(theta));
+    }
+    glEnd();
+
+    // Eye highlight
+    glColor3f(1, 1, 1);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float theta = i * M_PI / 180;
+        glVertex2f(144 + cos(theta), birdY + 7 + sin(theta));
+    }
+    glEnd();
+
+    // --- BEAK (two-tone for depth) ---
+    glColor3f(1.0f, 0.4f, 0.0f);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(152, birdY + 5);
+        glVertex2f(165, birdY + 10);
+        glVertex2f(152, birdY + 15);
+    glEnd();
+    glColor3f(0.9f, 0.3f, 0.0f);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(152, birdY + 5);
+        glVertex2f(165, birdY + 10);
+        glVertex2f(152, birdY + 10);
+    glEnd();
+}
+
+void drawBrickPattern(float x, float y, float width, float height) {
+    float brickW = 14.0f; // brick width
+    float brickH = 7.0f;  // brick height
+
+    for (float rowY = y; rowY < y + height; rowY += brickH) {
+        bool offset = ((int)((rowY - y) / brickH) % 2) == 1; // stagger rows
+        for (float colX = x + (offset ? brickW / 2 : 0); colX < x + width; colX += brickW) {
+
+            // Slight random variation for realism
+            float r = 0.75f + (rand() % 20) / 100.0f; // 0.75–0.95
+            float g = 0.25f + (rand() % 10) / 100.0f; // 0.25–0.35
+            float b = 0.15f + (rand() % 10) / 100.0f; // 0.15–0.25
+
+            // Brick fill
+            glColor3f(r, g, b);
+            glBegin(GL_QUADS);
+                glVertex2f(colX, rowY);
+                glVertex2f(colX + brickW - 1, rowY);
+                glVertex2f(colX + brickW - 1, rowY + brickH - 1);
+                glVertex2f(colX, rowY + brickH - 1);
+            glEnd();
+
+            // Brick highlight (top edge)
+            glColor3f(r + 0.1f, g + 0.1f, b + 0.1f);
+            glBegin(GL_LINES);
+                glVertex2f(colX, rowY + brickH - 1);
+                glVertex2f(colX + brickW - 1, rowY + brickH - 1);
+            glEnd();
+
+            // Mortar lines (light gray)
+            glColor3f(0.85f, 0.85f, 0.85f);
+            glBegin(GL_LINE_LOOP);
+                glVertex2f(colX, rowY);
+                glVertex2f(colX + brickW - 1, rowY);
+                glVertex2f(colX + brickW - 1, rowY + brickH - 1);
+                glVertex2f(colX, rowY + brickH - 1);
+            glEnd();
+        }
+    }
+}
+
+void drawPipe() {
+    float pipeW = 50.0f;
+
+    if (level == 1) {
+        // Only bottom pipe for Level 1
+        float bottomHeight = pipe.gapY;
+        drawBrickPattern(pipe.x, 0, pipeW, bottomHeight);
+    } else {
+        // Top pipe
+        float topY = pipe.gapY + gapSize;
+        float topHeight = windowHeight - topY;
+        drawBrickPattern(pipe.x, topY, pipeW, topHeight);
+
+        // Bottom pipe
+        float bottomHeight = pipe.gapY - gapSize;
+        drawBrickPattern(pipe.x, 0, pipeW, bottomHeight);
+    }
+}
+
+void drawGround() {
+    glColor3f(0.3f, 0.2f, 0.1f);
+    glBegin(GL_QUADS);
+    glVertex2f(0, 0);
+    glVertex2f(windowWidth, 0);
+    glVertex2f(windowWidth, 50);
+    glVertex2f(0, 50);
+    glEnd();
+
+    glColor3f(0.1f, 0.6f, 0.1f);
+    glBegin(GL_QUADS);
+    glVertex2f(0, 50);
+    glVertex2f(windowWidth, 50);
+    glVertex2f(windowWidth, 60);
+    glVertex2f(0, 60);
+    glEnd();
+}
+
+void updateLevel() {
+    if (score >= 5 && level == 1) {   // go to level 2 after score 5
+        level = 2;
+        pipe.speed = 4.0f;
+        gapSize = 100.0f; // smaller gap
+    }
+    if (score >= 10 && level == 2) {  // go to level 3 after score 10
+        level = 3;
+        pipe.speed = 3.0f;
+        gapSize = 80.0f; // harder gap
+    }
+}
+
+
+void update(int value) {
+    if (!gameOver) {
+        birdVelocity += gravity;
+        birdY += birdVelocity;
+
+        pipe.x -= pipe.speed;
+        groundOffset -= pipe.speed;
+        if (groundOffset < -50) groundOffset = 0;
+
+        if (level == 3) {
+            static int dir = 1;
+            pipe.gapY += dir * 2;
+            if (pipe.gapY > windowHeight - 100 || pipe.gapY < 100) dir *= -1;
+        }
+
+        if (pipe.x < -50) {
+            pipe.x = windowWidth;
+            pipe.gapY = rand() % (windowHeight - 200) + 100;
+            score++;
+            updateLevel();
+        }
+
+        if (birdY < 0 || birdY + 15 > windowHeight ||
+            (pipe.x < 130 && pipe.x + 50 > 100 &&
+             (birdY < pipe.gapY - gapSize || birdY + 15 > pipe.gapY + gapSize))) {
+            lives--;
+            if (lives <= 0) {
+                gameOver = true;
+            } else {
+                birdY = 300;
+                birdVelocity = 0;
+                pipe.x = windowWidth;
+            }
+        }
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, update, 0);
+}
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    drawGradientBackground();
+    drawPipe();
+    drawGround();
+    drawBird();
+
+    glColor3f(1, 1, 1);
+    drawText(10, windowHeight - 20, "Score: " + std::to_string(score));
+    drawText(150, windowHeight - 20, "Lives: " + std::to_string(lives));
+    drawText(250, windowHeight - 20, "Level: " + std::to_string(level));
+
+    if (gameOver) {
+        drawText(windowWidth / 2 - 50, windowHeight / 2, "GAME OVER");
+        drawText(windowWidth / 2 - 80, windowHeight / 2 - 30, "Press R to Restart");
+    }
+
+    glutSwapBuffers();
+}
+
+void keyboard(unsigned char key, int, int) {
+    if (key == ' ') {
+        birdVelocity = jumpStrength;
+    }
+    if (key == 'r' || key == 'R') {
+        resetGame();
+    }
+}
+
+void init() {
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, windowWidth, 0, windowHeight);
+}
+
+int main(int argc, char** argv) {
+    srand(time(0));
+    resetGame();
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(windowWidth, windowHeight);
+    glutCreateWindow("Flappy Bird with Levels");
+    init();
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+    glutTimerFunc(16, update, 0);
+    glutMainLoop();
+    return 0;
+}
