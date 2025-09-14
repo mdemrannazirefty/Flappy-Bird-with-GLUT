@@ -1,6 +1,6 @@
 # 🐦 Flappy Bird Game in C++ with OpenGL GLUT
 
-![Flappy Bird Game](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/raw/main/assets/gameplay.png)
+![Flappy Bird Game]([https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/raw/main/assets/gameplay.png](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/raw/main/Flappy%20Bird%20Game.gif))
 
 ## 🎮 Project Overview
 
