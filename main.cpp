@@ -8,6 +8,13 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+#endif
+
+
 int windowWidth = 800, windowHeight = 600;
 float birdY = 300, birdVelocity = 0, gravity = -0.3f, jumpStrength = 8.0f;
 int score = 0, lives = 3, level = 1;
@@ -44,6 +51,19 @@ struct Flower {
 const int flowerCount = 24;
 Flower flowers[flowerCount];
 float grassSwayTime = 0.0f;
+//==================== Sound ====================
+
+void playJumpSound() {
+#ifdef _WIN32
+    PlaySound(TEXT("bird_jump.wav"), NULL, SND_FILENAME | SND_ASYNC);
+#endif
+}
+
+void playHitSound() {
+#ifdef _WIN32
+    PlaySound(TEXT("bird_hit.wav"), NULL, SND_FILENAME | SND_ASYNC);
+#endif
+}
 
 // ==================== Game Reset ====================
 void resetGame() {
@@ -486,6 +506,7 @@ void update(int value) {
             (pipe.x < 130 && pipe.x + 50 > 100 &&
              (birdY < pipe.gapY - gapSize || birdY + 15 > pipe.gapY + gapSize))) {
             lives--;
+            playHitSound(); // sound plays when bird hits or loses a life
             if (lives <= 0) gameOver = true;
             else { birdY=300; birdVelocity=0; pipe.x=windowWidth; }
         }
@@ -534,6 +555,7 @@ void display() {
 // ==================== Keyboard ====================
 void keyboard(unsigned char key,int,int){
     if(key==' ') birdVelocity=jumpStrength;
+    playJumpSound();  // play jump sound
     if(key=='r'||key=='R') resetGame();
     if(key==27) exit(0);
 }
