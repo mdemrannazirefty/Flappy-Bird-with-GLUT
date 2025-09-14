@@ -52,7 +52,6 @@ const int flowerCount = 24;
 Flower flowers[flowerCount];
 float grassSwayTime = 0.0f;
 //==================== Sound ====================
-
 void playJumpSound() {
 #ifdef _WIN32
     PlaySound(TEXT("bird_jump.wav"), NULL, SND_FILENAME | SND_ASYNC);
