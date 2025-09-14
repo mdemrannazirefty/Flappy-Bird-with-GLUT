@@ -1,6 +1,6 @@
 # Flappy Bird Game with OpenGL and GLUT
 
-![Flappy Bird game screenshot]([https://i.imgur.com/83p14jU.png](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/blob/f5f367bdf32e8c30d209ba81a50a5771d742002d/Flappy%20Bird%20Game.gif))
+![Flappy Bird Gameplay](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/blob/main/Flappy%20Bird%20Game.gif?raw=true)
 
 This project is a classic **Flappy Bird** clone built from the ground up using **C++**, the **OpenGL** graphics library, and the **GLUT (OpenGL Utility Toolkit)**. It is a simple yet comprehensive example of how to create a 2D interactive application without a full-fledged game engine.
 
