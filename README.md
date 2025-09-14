@@ -1,47 +1,68 @@
-# 🐦 Flappy Bird Game in C++ with OpenGL GLUT
+# Flappy Bird Game with OpenGL and GLUT
 
-![Flappy Bird Game](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/raw/main/assets/gameplay.png)
+![Flappy Bird game screenshot]([https://i.imgur.com/83p14jU.png](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/blob/f5f367bdf32e8c30d209ba81a50a5771d742002d/Flappy%20Bird%20Game.gif))
 
-## 🎮 Overview
+This project is a classic **Flappy Bird** clone built from the ground up using **C++**, the **OpenGL** graphics library, and the **GLUT (OpenGL Utility Toolkit)**. It is a simple yet comprehensive example of how to create a 2D interactive application without a full-fledged game engine.
 
-This project is a desktop implementation of the popular Flappy Bird game using C++ and OpenGL GLUT. The game features smooth 2D graphics, real-time physics, and intuitive controls, providing an engaging experience for players.
+The game features custom-drawn graphics, basic physics simulation (gravity), collision detection, and a multi-level difficulty system. It's a great educational tool for anyone interested in learning the fundamentals of computer graphics and game development.
 
-## 📹 Demo Video
+---
 
-Watch the gameplay here: [Flappy Bird Demo](https://youtu.be/ZSmQ_o1Cbq4)
+### 🎥 Demo Video
 
-## 🛠️ Features
+Watch the game in action on YouTube: **[Flappy Bird with OpenGL and GLUT Demo](https://youtu.be/ZSmQ_o1Cbq4)**
 
-- **Smooth 2D Graphics**: Leveraging OpenGL and GLUT for rendering.  
-- **Real-Time Physics**: Gravity and collision detection for realistic gameplay.  
-- **Endless Gameplay**: Dynamic pipe generation for continuous play.  
-- **Responsive Controls**: Flap the bird using the spacebar or mouse click.  
-- **Score Tracking**: Displays current score and high score.  
+---
 
-## ⚙️ Installation
+### 🛠️ Tools and Libraries Used
 
-1. **Clone the Repository**:
+* **C++:** The core programming language.
+* **OpenGL:** The industry-standard API for rendering 2D and 3D graphics. This project uses it for all drawing functions.
+* **GLUT:** A utility library that simplifies the windowing and event handling for OpenGL applications.
+* **Windows Multimedia API:** Used for playing sound effects on Windows.
 
-   ```bash
-   git clone https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT.git
-   cd Flappy-Bird-Game-GLUT
-2. Install Dependencies:
-   Windows: Install MinGW and ensure g++ is available in your PATH.
-   macOS/Linux: Install freeglut using your package manager.
-3. Compile the Game:
-   g++ -o flappy_bird main.cpp -lGL -lGLU -lglut
-4. Run the Game:
-   ./flappy_bird
+---
 
-Controls
+### ✨ Key Features
 
-Spacebar or Left Mouse Click: Flap the bird.
+* **Custom 2D Graphics:** All game objects, including the bird, pipes, clouds, and flowers, are rendered using basic OpenGL primitives (`GL_QUADS`, `GL_TRIANGLES`, `GL_TRIANGLE_FAN`, `GL_LINES`).
+* **Game Physics:** A simple gravity system and a jump mechanic are implemented to control the bird's vertical movement.
+* **Collision Detection:** The game accurately detects collisions between the bird and the pipes or the ground.
+* **Multi-Level Difficulty:** The game progresses through three levels, with the pipes changing in speed, style, and gap size as the score increases.
+* **Dynamic Background:** The game's background changes with the level, from a bright daytime sky to a sunset and a rainy, stormy environment.
+* **Sound Effects:** Audio feedback is provided for jumping and hitting obstacles.
 
-R key: Restart after game over.
+---
 
-Esc key: Exit the game.
+### ⚙️ How to Compile and Run
 
-📄 License
+1.  **Prerequisites:** You need a C++ compiler (like g++) and the GLUT library set up on your system.
+2.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT.git](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT.git)
+    cd Flappy-Bird-Game-GLUT
+    ```
+3.  **Compile the code:**
+    ```bash
+    g++ -o flappy_bird flappy_bird.cpp -lglut -lGL -lGLU
+    ```
+    *Note: The exact command might vary depending on your operating system and compiler setup. You might need to link against `libwinmm.a` on Windows for sound support.*
 
-I can also make a **shorter, eye-catching GitHub repo description** for the top of your repo if you want it to immediately grab attention. Do you want me to do that?
+4.  **Run the game:**
+    ```bash
+    ./flappy_bird
+    ```
 
+---
+
+### 🎮 How to Play
+
+* **Spacebar:** Press the spacebar to make the bird jump.
+* **R:** Press 'R' to restart the game after it's over.
+* **Esc:** Press the Escape key to exit the game.
+
+---
+
+### 🤝 Contribution
+
+Feel free to fork the repository, open issues, or submit pull requests. All contributions are welcome!
