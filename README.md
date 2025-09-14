@@ -1,38 +1,68 @@
-# Flappy Bird Game with OpenGL and GLUT
+# 🐦 Flappy Bird Game in C++ with OpenGL GLUT
 
-![Flappy Bird Gameplay](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/blob/main/Flappy%20Bird%20Game.gif?raw=true)
+![Flappy Bird Game](https://github.com/mdemrannazirefty/Flappy-Bird-Game-GLUT/raw/main/assets/gameplay.png)
 
-This project is a classic **Flappy Bird** clone built from the ground up using **C++**, the **OpenGL** graphics library, and the **GLUT (OpenGL Utility Toolkit)**. It is a simple yet comprehensive example of how to create a 2D interactive application without a full-fledged game engine.
+## 🎮 Project Overview
 
-The game features custom-drawn graphics, basic physics simulation (gravity), collision detection, and a multi-level difficulty system. It's a great educational tool for anyone interested in learning the fundamentals of computer graphics and game development.
+This project is a C++ implementation of the popular **Flappy Bird game** using **OpenGL** and **GLUT**. The game replicates the classic bird-flapping experience, featuring:
 
----
+- Smooth 2D graphics with dynamic backgrounds.
+- Real-time physics for gravity and bird movement.
+- Collision detection with pipes and obstacles.
+- Score and level tracking.
+- Fun visual effects like clouds, flowers, rain, and swaying grass.
 
-### 🎥 Demo Video
+### Why This Project?
 
-Watch the game in action on YouTube: **[Flappy Bird with OpenGL and GLUT Demo](https://youtu.be/ZSmQ_o1Cbq4)**
+The project was implemented to:
 
----
+- Gain practical experience with **OpenGL and GLUT** graphics programming.
+- Understand **2D game mechanics**, such as collision detection, physics simulation, and procedural obstacle generation.
+- Explore creative design of graphics using C++ without external game engines.
 
-### 🛠️ Tools and Libraries Used
+### Significance
 
-* **C++:** The core programming language.
-* **OpenGL:** The industry-standard API for rendering 2D and 3D graphics. This project uses it for all drawing functions.
-* **GLUT:** A utility library that simplifies the windowing and event handling for OpenGL applications.
-* **Windows Multimedia API:** Used for playing sound effects on Windows.
+This game demonstrates the ability to create engaging, interactive graphics applications with minimal dependencies. It's ideal for learners to understand **game programming, graphics rendering, and animation in C++**.
 
----
+### Target Audience
 
-### ✨ Key Features
+- Students learning computer graphics or game development.
+- Hobbyists and indie game developers exploring 2D game mechanics.
+- Anyone interested in classic arcade-style games and OpenGL programming.
 
-* **Custom 2D Graphics:** All game objects, including the bird, pipes, clouds, and flowers, are rendered using basic OpenGL primitives (`GL_QUADS`, `GL_TRIANGLES`, `GL_TRIANGLE_FAN`, `GL_LINES`).
-* **Game Physics:** A simple gravity system and a jump mechanic are implemented to control the bird's vertical movement.
-* **Collision Detection:** The game accurately detects collisions between the bird and the pipes or the ground.
-* **Multi-Level Difficulty:** The game progresses through three levels, with the pipes changing in speed, style, and gap size as the score increases.
-* **Dynamic Background:** The game's background changes with the level, from a bright daytime sky to a sunset and a rainy, stormy environment.
-* **Sound Effects:** Audio feedback is provided for jumping and hitting obstacles.
+## 📹 Demo Video
 
----
+Check out the gameplay: [Flappy Bird Demo](https://youtu.be/ZSmQ_o1Cbq4)
+
+## 🛠️ Tools and Libraries Used
+
+- **C++**: Core language for implementation.
+- **OpenGL**: For rendering 2D graphics.
+- **GLUT**: Windowing and input handling.
+- **Math Functions**: `sin`, `cos`, `fmod`, and constants like `M_PI` for animation and shapes.
+- **Audio (Windows only)**: `PlaySound()` function to play jump and hit sounds.
+- Key OpenGL functions used include:
+  - `glBegin()`, `glEnd()`, `glVertex2f()` – drawing shapes.
+  - `glColor3f()` – coloring objects.
+  - `glRasterPos2f()` and `glutBitmapCharacter()` – text rendering.
+  - `glPushMatrix()` / `glPopMatrix()` – managing transformations.
+  - `glutTimerFunc()` – controlling frame updates.
+
+## 🧠 Knowledge Applied
+
+### a) For Job Market Purpose
+
+- Understanding graphics programming fundamentals.
+- Implementing **real-time game physics and collision detection**.
+- Using **OpenGL and C++** for interactive applications.
+
+### b) For Higher Study Purpose
+
+- Learning **procedural content generation** for games.
+- Applying mathematical concepts for animations and movements.
+- Building **2D game engines** as a foundation for advanced studies.
+
+
 
 ### ⚙️ How to Compile and Run
 
